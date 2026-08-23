@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=600, width=device-width">
+<title>Oroboro - AR</title>
+<style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: #000; color: #fff; width: 600px; height: 600px; overflow: hidden; font-family: -apple-system, sans-serif; }
+
+  #app { width: 600px; height: 600px; display: flex; flex-direction: column; padding: 20px; gap: 12px; }
+
+  h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
+
+ .card {
+    width: 100%;
+    height: 88px;
+    border: 2px solid #222;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    font-size: 20px;
+    transition: all 0.15s;
+  }
+ .card.focused {
+    border-color: #fff;
+    background: #fff;
+    color: #000;
+    transform: scale(1.02);
+  }
+
+ .footer { margin-top: auto; font-size: 12px; opacity: 0.5; }
+</style>
+</head>
+<body>
+<div id="app">
+  <h1>OROBORO</h1>
+  <div class="card focused" data-action="1">01 - Dashboard</div>
+  <div class="card" data-action="2">02 - Widgets</div>
+  <div class="card" data-action="3">03 - System</div>
+  <div class="footer">D-PAD to move • ENTER to select</div>
+</div>
+
+<script>
+  const cards = [...document.querySelectorAll('.card')];
+  let idx = 0;
+
+  function updateFocus() {
+    cards.forEach((c,i) => c.classList.toggle('focused', i === idx));
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowDown') { idx = Math.min(idx+1, cards.length-1); updateFocus(); }
+    if (e.key === 'ArrowUp') { idx = Math.max(idx-1, 0); updateFocus(); }
+    if (e.key === 'Enter') {
+      const action = cards[idx].dataset.action;
+      // YOUR LOGIC HERE
+      console.log('Selected:', action);
+      // Example: fetch('/api/...')
+      cards[idx].textContent = 'Loading...';
+      setTimeout(() => cards[idx].textContent = `Done: ${action}`, 500);
+    }
+  });
+
+  // For testing with temple tap / clicks
+  cards.forEach((c,i) => c.addEventListener('click', () => { idx=i; updateFocus(); document.dispatchEvent(new KeyboardEvent('keydown',{key:'Enter'})) }));
+</script>
+</body>
+</html>
